@@ -1,0 +1,31 @@
+db:
+    container_name: db
+    image: mysql:5.7
+    ports:
+        - "3306:3306"
+    environment:
+        - "MYSQL_ROOT_PASSWORD=root"
+        - "MYSQL_USER=bds-manager"
+        - "MYSQL_PASSWORD=bds-manager"
+        - "MYSQL_DATABASE=bds-manager"
+web:
+    image: juju/web
+    container_name: web
+    links:
+        - db
+    ports:
+        - 80:80
+        - "9000:80"
+    volumes:
+        - .:/var/www/bdmanager
+
+elk:
+    container_name: elk
+    image: willdurand/elk
+    ports:
+        - 81:80
+    volumes:
+        - ../docker/elk/logstash:/etc/logstash
+        - ../docker/elk/logstash/patterns:/opt/logstash/patterns
+    volumes_from:
+        - web

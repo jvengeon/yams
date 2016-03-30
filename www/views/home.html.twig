@@ -1,0 +1,19 @@
+{% extends 'common/body.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<h3>Bd manager</h3>
+Dès : 
+{% for des in jeu %}
+    {{ des }} {% if loop.last == false %} - {% endif %}
+{% endfor %}
+
+<h4>Combinaisons valides</h4>
+<ul>
+{% for combinaison in validsCombinaisons %}
+    <li>{{ combinaison.name }} : {{ combinaison.points }} pts </li>
+{% endfor %}
+</ul>
+{% endblock %}
+
