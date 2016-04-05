@@ -1,0 +1,6 @@
+.git
+sync-exclusions
+sync
+cache
+public_html/attach/
+public_html/minisites

@@ -5,19 +5,22 @@ db:
         - "3306:3306"
     environment:
         - "MYSQL_ROOT_PASSWORD=root"
-        - "MYSQL_USER=bds-manager"
-        - "MYSQL_PASSWORD=bds-manager"
-        - "MYSQL_DATABASE=bds-manager"
+        - "MYSQL_USER=yams"
+        - "MYSQL_PASSWORD=yams"
+        - "MYSQL_DATABASE=yams"
 web:
     image: juju/web
     container_name: web
+    environment:
+      - "USER_ID=${USER_ID}"
+      - "GROUP_ID=${GROUP_ID}"
     links:
         - db
     ports:
-        - 80:80
+        - 8080:80
         - "9000:80"
     volumes:
-        - .:/var/www/bdmanager
+        - .:/var/www/yams
 
 elk:
     container_name: elk

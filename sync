@@ -1,0 +1,45 @@
+#!/bin/sh
+
+REMOTE_DIR="/var/www/yams"
+REMOTE_SERVER="192.168.99.100"
+PRIVATE_KEY_PATH="/cygdrive/c/Users/$USERNAME/.ssh/id_rsa"
+
+function showHelp {
+    echo -e "Sync tool"
+    echo -e " "
+    echo -e "options:"
+    echo -e "-d, --delete              \e[32mDelete extraneous files from dest dirs\e[0m"
+    echo -e "-f, --force               \e[32mDelete all distant files before sync\e[0m"
+}
+
+function clearRemoteDir {
+    echo -e "\e[32m--- Cleaning remote directory ---\e[0m"
+    /usr/bin/ssh $USERNAME@$REMOTE_SERVER "rm -rf $REMOTE_DIR/*"
+} 
+
+while test $# -gt 0; do
+    case "$1" in
+        -h|--help)
+            showHelp
+            exit 0
+            ;;
+            -d|--delete)
+                DELETE="--delete"
+                shift
+                ;;
+            -f|--force)
+                FORCE=true
+                shift
+                ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+if [ $FORCE ]; then 
+    clearRemoteDir
+fi
+
+echo -e "--- Synchronizing to $REMOTE_SERVER ---"
+/usr/bin/rsync -avz -e "/usr/bin/ssh -i ${PRIVATE_KEY_PATH}" --exclude-from 'sync-exclusions' $DELETE . $USERNAME@$REMOTE_SERVER:$REMOTE_DIR
